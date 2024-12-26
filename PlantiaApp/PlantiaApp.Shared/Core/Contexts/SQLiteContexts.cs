@@ -23,7 +23,7 @@ namespace PlantiaApp.Shared.Core.Contexts
         
         public SQLiteAsyncConnection? Database { get; set; }
 
-        private async Task Init()
+        public async Task Init()
         {
             if (Database is not null)
                 return;
