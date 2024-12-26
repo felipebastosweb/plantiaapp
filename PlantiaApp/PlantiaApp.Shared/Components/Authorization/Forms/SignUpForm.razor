@@ -26,7 +26,7 @@
         </label>
     </div>
     <div class="mb-3">
-        <button type="submit" class="btn btn-success">Confirm</button>
+        <button type="submit" class="btn btn-success" @AcceptTermsDisabled >Confirm</button>
     </div>
 </EditForm>
 
@@ -43,6 +43,7 @@
     private string CssPassword = "form-control";
     private string CssRepeatPassword = "form-control";
     private string CssAcceptTerms = "form-check-input";
+    private string AcceptTermsDisabled = "";
 
     protected override async Task OnInitializedAsync()
     {
@@ -66,8 +67,17 @@
 
     private void AcceptTermsChecked()
     {
-        CssAcceptTerms = UserInput!.AcceptTerms ? "form-check-input InValid" : "form-check-input Valid";
+        CssAcceptTerms = "form-check-input InValid";
+        AcceptTermsDisabled = "disabled";
+
+        if (UserInput!.AcceptTerms)
+        {
+            CssAcceptTerms = "form-check-input Valid";
+            AcceptTermsDisabled = "";
+        }
     }
+
+
 
     public void Update()
     {

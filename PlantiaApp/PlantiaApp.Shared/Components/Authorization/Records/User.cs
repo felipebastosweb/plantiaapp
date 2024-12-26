@@ -6,6 +6,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+public record UserRegisteredOutput
+{
+    public string? Username { get; set; }
+}
+
 public record SignUpInput
 {
     public string? Username { get; set; }

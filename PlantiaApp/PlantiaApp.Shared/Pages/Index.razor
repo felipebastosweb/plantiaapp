@@ -1,24 +1,70 @@
 ﻿@page "/"
 
+@using Auth = PlantiaApp.Shared.Components.Authorization
+@using PlantiaApp.Shared.Components.Authorization.Records
+
 @using PlantiaApp.Shared.Components.Authorization.Forms
 
 @using PlantiaApp.Shared.Services
 @inject IFormFactor FormFactor
 
-<PageTitle>Home</PageTitle>
+<PageTitle>Hello</PageTitle>
 
-<h1>Hello, world!</h1>
+<h1>Oi! Vamos plantar.</h1>
+<p>Ajudamos pessoas a deixarem o planeta mais verde.</p>
 
+<!--
 Welcome to your new app running on <em>@factor</em> using <em>@platform</em>.
+-->
+@if (UserRegistereds.Count() > 0)
+{
+    <article class="container">
+        <header class="row">
+            <article class="col-12">
+                <h5>Deseja continuar</h5>
+            </article>
+        </header>
+        <section class="row">
+            @foreach (var user in UserRegistereds)
+            {
+                <article class="col-sm-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">@user.Username</h5>
+                        </div>
+                    </div>
+                </article>
+            }
+        </section>
+    </article>
+}
 
+<article class="container">
+    <section class="row">
+        <article class="col-6">
+            <SignUpForm />
+        </article>
+        <article class="col-6">
+            <LoginForm />
+        </article>
+    </section>
+</article>
 
-<SignUpForm />
-<LoginForm />
+<!--
 <RescueAccountForm />
+-->
 
 
 @code {
+
+    public List<UserRegisteredOutput> UserRegistereds { get; set; } = new();
+
     private string factor => FormFactor.GetFormFactor();
     private string platform => FormFactor.GetPlatform();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+    }
 
 }

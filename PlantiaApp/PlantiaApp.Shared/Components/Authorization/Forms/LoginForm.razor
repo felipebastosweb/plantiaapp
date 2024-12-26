@@ -11,34 +11,23 @@
     <ValidationSummary />
     <div class="mb-3 Username">
         <label>Username</label>
-        @if (UsernameIsValid())
-        {
-            <InputText @bind-Value="UserInput!.Username" class="form-control Valid" />
-        }
-        else
-        {
-            <InputText @bind-Value="UserInput!.Username" class="form-control InValid" />
-        }
+        <InputText @bind-Value="UserInput!.Username" class="@CssUsername" @oninput="UsernameIsValid" />
     </div>
     <div class="mb-3 Password">
         <label>Username</label>
-        @if (PasswordIsValid())
-        {
-            <InputText @bind-Value="UserInput!.Password" type="password" class="form-control Valid" />
-        }
-        else
-        {
-            <InputText @bind-Value="UserInput!.Password" type="password" class="form-control InValid" />
-        }
+        <InputText @bind-Value="UserInput!.Password" type="password" class="@CssPassword" @oninput="PasswordIsValid" />
     </div>
     <div class="mb-b3">
-        <InputCheckbox @bind-Value="UserInput!.KeepConnected" class="form-check-input" />
+        <InputCheckbox @bind-Value="UserInput!.KeepConnected" class="form-check-input" @onchange="KeepConfirmed" />
         <label class="form-check-label">
             I want keep me connected.
         </label>
     </div>
     <div class="mb-3">
         <button type="submit" class="btn btn-success">Confirm</button>
+    </div>
+    <div class="mb-3">
+        <p>Esqueceu sua senha? <a href="/rescue-account">Clique aqui</a>.</p>
     </div>
 </EditForm>
 
@@ -50,19 +39,28 @@
 
     private LoginInput? UserInput { get; set; } = new();
 
+    private string CssUsername = "form-control";
+    private string CssPassword = "form-control";
+    private string CssKeepConnected = "";
+
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
     }
 
-    private bool UsernameIsValid()
+    private void UsernameIsValid()
     {
-        return string.IsNullOrEmpty(UserInput!.Username);
+        CssUsername = string.IsNullOrEmpty(UserInput!.Username) ? "form-control InValid" : "form-control Valid";
     }
 
-    private bool PasswordIsValid()
+    private void PasswordIsValid()
     {
-        return string.IsNullOrEmpty(UserInput!.Password);
+        CssPassword = string.IsNullOrEmpty(UserInput!.Password) ? "form-control InValid" : "form-control Valid";
+    }
+
+    private void KeepConfirmed()
+    {
+        // TODO: Salvar sessão do usuário no banco de dados sqlite
     }
 
     public void OnSubmitClick()
