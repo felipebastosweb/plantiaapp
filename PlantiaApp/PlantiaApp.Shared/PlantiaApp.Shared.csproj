@@ -19,6 +19,7 @@
 
   <ItemGroup>
     <Folder Include="Components\Authorization\Entities\" />
+    <Folder Include="Components\Authorization\Designs\" />
     <Folder Include="Components\Profile\" />
     <Folder Include="Core\Models\" />
   </ItemGroup>

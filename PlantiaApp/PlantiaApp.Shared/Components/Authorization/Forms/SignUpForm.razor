@@ -1,7 +1,11 @@
 ﻿@using PlantiaApp.Shared.Components.Authorization.Records
 
+@using Core.Contexts
+@using Core.Entities
+
 @inject NavigationManager Navigate
 
+@inject SQLiteContexts Context
 
 <h3>SignUp</h3>
 
@@ -10,18 +14,18 @@
     <ValidationSummary />
     <div class="mb-3 Username">
         <label>Username</label>
-        <InputText @bind-Value="UserInput!.Username" class="@CssUsername" @oninput="UsernameIsValid" />
+        <InputText @bind-Value="UserInput.Username" class="@CssUsername" @oninput="UsernameIsValid" />
     </div>
     <div class="mb-3 Password">
         <label>Password</label>
-        <InputText @bind-Value="UserInput!.Password" type="password" class="@CssPassword" @oninput="PasswordIsValid" />
+        <InputText @bind-Value="UserInput.Password" type="password" class="@CssPassword" @oninput="PasswordIsValid" />
     </div>
     <div class="mb-3">
         <label>Repeat Password</label>
-        <InputText @bind-Value="UserInput!.RepeatPassword" class="@CssRepeatPassword" @oninput="RepeatPasswordIsEqualToPassword" />
+        <InputText @bind-Value="UserInput.RepeatPassword" class="@CssRepeatPassword" @oninput="RepeatPasswordIsEqualToPassword" />
     </div>
     <div class="mb-b3">
-        <InputCheckbox @bind-Value="UserInput!.AcceptTerms" class="form-check-input" @oninput="AcceptTermsChecked" />
+        <InputCheckbox @bind-Value="UserInput.AcceptTerms" class="form-check-input" @oninput="AcceptTermsChecked" />
         <label class="form-check-label">
             To use this application you must agree to the Terms of Use and Privacy Policy.
         </label>
@@ -42,7 +46,7 @@
        Scenary: A senha definida é forte
     **/
 
-    private SignUpInput? UserInput { get; set; } = new();
+    private SignUpInput UserInput { get; set; } = new();
 
     private string CssUsername = "form-control";
     private string CssPassword = "form-control";
@@ -87,8 +91,17 @@
         StateHasChanged();
     }
 
-    public void OnSubmitClick()
+    public async Task OnSubmitClick()
     {
+        await Context!.Database!.InsertAsync(
+            new User()
+                {
+                    Username = UserInput.Username,
+                    PasswordHash = UserInput.Password,
+                    CreatedDate = DateTime.Now,
+                    //UpdatedDate = DateTime.Now,
+                    //ArquivedDate = DateTime.Now
+                });
         Navigate.NavigateTo("/home");
     }
 }

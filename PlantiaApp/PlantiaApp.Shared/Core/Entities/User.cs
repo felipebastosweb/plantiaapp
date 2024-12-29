@@ -12,8 +12,8 @@ public class User : BaseEntity
     public string? Username { get; set; } = string.Empty;
     public string? PasswordHash { get; set; } = string.Empty;
     public bool Arquived { get; set; } = false;
-    public List<UserEmail>? Emails { get; set; }
-    public List<UserTelephone>? Telephones { get; set; }
+    [Ignore] public List<UserEmail>? Emails { get; set; }
+    [Ignore] public List<UserTelephone>? Telephones { get; set; }
 }
 
 public class UserAvatar : BaseEntity

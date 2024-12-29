@@ -1,6 +1,8 @@
 ﻿using Microsoft.Extensions.Logging;
 using PlantiaApp.Services;
 using PlantiaApp.Shared.Services;
+using PlantiaApp.Shared.Core.Contexts;
+using PlantiaApp.Shared.Components.Authorization.Services;
 
 namespace PlantiaApp
 {
@@ -17,7 +19,9 @@ namespace PlantiaApp
                 });
 
             // Add device-specific services used by the PlantiaApp.Shared project
-            builder.Services.AddSingleton<IFormFactor, FormFactor>();
+            //builder.Services.AddSingleton<IFormFactor, FormFactor>();
+
+            builder.Services.AddSingleton<SQLiteContexts>();
 
             builder.Services.AddMauiBlazorWebView();
 

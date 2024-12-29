@@ -1,5 +1,10 @@
 ﻿@using PlantiaApp.Shared.Components.Authorization.Records
 
+@using Core.Contexts
+@using Core.Entities
+
+@inject SQLiteContexts Context
+
 @inject NavigationManager Navigate
 
 <!--
@@ -17,7 +22,7 @@ User Story: Quando o usuário já é cadastrado na plataforma mas ainda não uso
         <InputText @bind-Value="UserInput!.Username" class="@CssUsername" @oninput="UsernameIsValid" />
     </div>
     <div class="mb-3 Password">
-        <label>Username</label>
+        <label>Password</label>
         <InputText @bind-Value="UserInput!.Password" type="password" class="@CssPassword" @oninput="PasswordIsValid" />
     </div>
     <div class="mb-b3">
@@ -60,10 +65,18 @@ User Story: Quando o usuário já é cadastrado na plataforma mas ainda não uso
         CssPassword = string.IsNullOrEmpty(UserInput!.Password) ? "form-control InValid" : "form-control Valid";
     }
 
-    public void OnSubmitClick()
+    public async Task OnSubmitClick()
     {
-        //SignUpFormObservable.UnSubscribe(new SignUpFormObserver(this));
-        Navigate.NavigateTo("/home");
+        await Context!.Init();
+        var user = await Context!.Database!.Table<User>()
+            .Where(user => user.Username == UserInput!.Username && user.PasswordHash == UserInput!.Password)
+            .FirstAsync();
+
+        if (user != null)
+        {
+            // TODO: Salvar sessão do usuário para ficar Logado
+            Navigate.NavigateTo("/home");
+        }
     }
 
 }

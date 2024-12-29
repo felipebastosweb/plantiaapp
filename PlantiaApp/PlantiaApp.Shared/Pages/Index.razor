@@ -1,21 +1,33 @@
 ﻿@page "/"
 
+@using Core.Entities;
+
+@using Core.Contexts;
+
 @using PlantiaApp.Shared.Components.Authorization.Records
 
 @using PlantiaApp.Shared.Components.Authorization.Forms
 
-<!--
 @using PlantiaApp.Shared.Components.Authorization.Services
 
+@inject SQLiteContexts Context
+
+<!--
 @inject UserSQLiteService userService
 -->
 
 <PageTitle>Hello</PageTitle>
 
-<h1>Oi! Vamos plantar.</h1>
-<p>Ajudamos pessoas a deixarem o planeta mais verde.</p>
+<article class="container">
+    <header class="row">
+        <article class="col-12">
+            <h1>Oi! Vamos plantar.</h1>
+            <p>Ajudamos pessoas a deixarem o planeta mais verde.</p>
+        </article>
+    </header>
+</article>
 
-@if (UserRegistereds != null && UserRegistereds!.Count() > 0)
+@if (UserRegistereds.Count() > 0)
 {
     <article class="container">
         <header class="row">
@@ -53,24 +65,31 @@
 
 @code
 {
-    /***
-     User Story: Como usuário desejo ver a lista dos usuários registrados no dispositivo para fazer o login rápido
-        Scenary: Não existem usuários cadastrados ou nesse aplicativo
-            When - A página carrega verifica que não existem usuários no dispositivo
-            Than - Não exibe a lista de usuários para login rápido
-        Scenary: Existe pelo menos um usuário que se cadastrou ou logou nesse aplicativo
-            When - A página encontra usuários cadastrados no dispositivo
-            And - exibe a Lista os usuários para login rápido
-            Than - O usuário clica no card para fazer o login rápido
-            And - é direcionado para a página Home
-     **/
+        /***
+        User Story: Como usuário desejo ver a lista dos usuários registrados no dispositivo para fazer o login rápido
+           Scenary: Não existem usuários cadastrados ou nesse aplicativo
+               When - A página carrega verifica que não existem usuários no dispositivo
+               Than - Não exibe a lista de usuários para login rápido
+           Scenary: Existe pelo menos um usuário que se cadastrou ou logou nesse aplicativo
+               When - A página encontra usuários cadastrados no dispositivo
+               And - exibe a Lista os usuários para login rápido
+               Than - O usuário clica no card para fazer o login rápido
+               And - é direcionado para a página Home
+        **/
 
-    public List<UserRegisteredOutput>? UserRegistereds { get; set; } = [];
+    private UserSQLiteService? userService { get; set; }
+
+    public List<UserRegisteredOutput> UserRegistereds { get; set; } = [];
 
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
-        // UserRegistereds = await userService.AllAsync();
+        await Context!.Init();
+        var users = await Context!.Database!.Table<User>().ToListAsync();
+        foreach (var user in users)
+        {
+            UserRegistereds.Add(new UserRegisteredOutput() { Id = user.Id, Username = user.Username });
+        }
     }
 
 }
