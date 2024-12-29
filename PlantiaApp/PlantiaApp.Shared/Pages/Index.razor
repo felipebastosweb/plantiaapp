@@ -1,27 +1,26 @@
 ﻿@page "/"
 
-@using Auth = PlantiaApp.Shared.Components.Authorization
 @using PlantiaApp.Shared.Components.Authorization.Records
 
 @using PlantiaApp.Shared.Components.Authorization.Forms
 
-@using PlantiaApp.Shared.Services
-@inject IFormFactor FormFactor
+<!--
+@using PlantiaApp.Shared.Components.Authorization.Services
+
+@inject UserSQLiteService userService
+-->
 
 <PageTitle>Hello</PageTitle>
 
 <h1>Oi! Vamos plantar.</h1>
 <p>Ajudamos pessoas a deixarem o planeta mais verde.</p>
 
-<!--
-Welcome to your new app running on <em>@factor</em> using <em>@platform</em>.
--->
-@if (UserRegistereds.Count() > 0)
+@if (UserRegistereds != null && UserRegistereds!.Count() > 0)
 {
     <article class="container">
         <header class="row">
             <article class="col-12">
-                <h5>Deseja continuar</h5>
+                <h5>Login Rápido</h5>
             </article>
         </header>
         <section class="row">
@@ -39,32 +38,39 @@ Welcome to your new app running on <em>@factor</em> using <em>@platform</em>.
     </article>
 }
 
+
 <article class="container">
     <section class="row">
-        <article class="col-6">
+        <article class="col-xs-12 col-md-6">
             <SignUpForm />
         </article>
-        <article class="col-6">
+        <article class="col-xs-12 col-md-6">
             <LoginForm />
         </article>
     </section>
 </article>
 
-<!--
-<RescueAccountForm />
--->
 
+@code
+{
+    /***
+     User Story: Como usuário desejo ver a lista dos usuários registrados no dispositivo para fazer o login rápido
+        Scenary: Não existem usuários cadastrados ou nesse aplicativo
+            When - A página carrega verifica que não existem usuários no dispositivo
+            Than - Não exibe a lista de usuários para login rápido
+        Scenary: Existe pelo menos um usuário que se cadastrou ou logou nesse aplicativo
+            When - A página encontra usuários cadastrados no dispositivo
+            And - exibe a Lista os usuários para login rápido
+            Than - O usuário clica no card para fazer o login rápido
+            And - é direcionado para a página Home
+     **/
 
-@code {
-
-    public List<UserRegisteredOutput> UserRegistereds { get; set; } = new();
-
-    private string factor => FormFactor.GetFormFactor();
-    private string platform => FormFactor.GetPlatform();
+    public List<UserRegisteredOutput>? UserRegistereds { get; set; } = [];
 
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
+        // UserRegistereds = await userService.AllAsync();
     }
 
 }

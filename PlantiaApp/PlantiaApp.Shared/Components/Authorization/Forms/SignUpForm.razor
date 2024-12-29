@@ -2,6 +2,7 @@
 
 @inject NavigationManager Navigate
 
+
 <h3>SignUp</h3>
 
 <EditForm Model="UserInput" OnSubmit="OnSubmitClick">
@@ -33,9 +34,13 @@
 
 @code {
 
-     /***
-     * Como visitante desejo 
-     **/
+    /***
+       User Story: Quando o usuário vai fazer o primeiro acesso na plataforma deve se cadastrar
+       Scenary: O Username escolhido já existe
+       Scenary: O Username escolhido não existe ainda
+       Scenary: A senha definida é fraca
+       Scenary: A senha definida é forte
+    **/
 
     private SignUpInput? UserInput { get; set; } = new();
 
@@ -77,8 +82,6 @@
         }
     }
 
-
-
     public void Update()
     {
         StateHasChanged();
@@ -88,8 +91,4 @@
     {
         Navigate.NavigateTo("/home");
     }
-
-    /*
-    */
-
 }

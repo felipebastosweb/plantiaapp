@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 public record UserRegisteredOutput
 {
+    public Guid Id { get; set; }
     public string? Username { get; set; }
 }
 
@@ -30,4 +31,11 @@ public record LoginInput
 public record RescueAccountInput
 {
     public string? Email { get; set; }
+}
+
+public record UserUpdateInput
+{
+    public Guid Id { get; set; }
+    public string? Username { get; set; }
+    public string? Password { get; set; }
 }

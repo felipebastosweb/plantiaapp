@@ -2,6 +2,9 @@
 
 @inject NavigationManager Navigate
 
+<!--
+User Story: Quando o usuário já é cadastrado na plataforma mas ainda não usou o dispositivo deve se logar nesse dispositivo
+-->
 
 <h3>LoginForm</h3>
 
@@ -18,7 +21,7 @@
         <InputText @bind-Value="UserInput!.Password" type="password" class="@CssPassword" @oninput="PasswordIsValid" />
     </div>
     <div class="mb-b3">
-        <InputCheckbox @bind-Value="UserInput!.KeepConnected" class="form-check-input" @onchange="KeepConfirmed" />
+        <InputCheckbox @bind-Value="UserInput!.KeepConnected" class="form-check-input" />
         <label class="form-check-label">
             I want keep me connected.
         </label>
@@ -41,7 +44,6 @@
 
     private string CssUsername = "form-control";
     private string CssPassword = "form-control";
-    private string CssKeepConnected = "";
 
     protected override async Task OnInitializedAsync()
     {
@@ -56,11 +58,6 @@
     private void PasswordIsValid()
     {
         CssPassword = string.IsNullOrEmpty(UserInput!.Password) ? "form-control InValid" : "form-control Valid";
-    }
-
-    private void KeepConfirmed()
-    {
-        // TODO: Salvar sessão do usuário no banco de dados sqlite
     }
 
     public void OnSubmitClick()
