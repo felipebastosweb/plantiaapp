@@ -13,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\PlantiaApp.Shared\PlantiaApp.Shared.csproj" />
+    <ProjectReference Include="..\PlantiaApp.Web.Shared\PlantiaApp.Web.Shared.csproj" />
   </ItemGroup>
 
 </Project>

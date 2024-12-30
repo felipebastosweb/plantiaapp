@@ -21,8 +21,10 @@ namespace PlantiaApp
             // Add device-specific services used by the PlantiaApp.Shared project
             //builder.Services.AddSingleton<IFormFactor, FormFactor>();
 
+            #if ANDROID || IOS
             builder.Services.AddSingleton<SQLiteContexts>();
-
+            #endif
+            
             builder.Services.AddMauiBlazorWebView();
 
 #if DEBUG
