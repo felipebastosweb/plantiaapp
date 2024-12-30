@@ -4,6 +4,7 @@
 PlantiaApp/PlantiaApp/bin
 PlantiaApp/PlantiaApp.Shared/bin
 PlantiaApp/PlantiaApp.Web/bin
+PlantiaApp/PlantiaApp.Web.Shared/bin
 PlantiaApp/PlantiaApp.Web.Client/bin
 PlantiaApp.Api/bin
 PlantiaApp.TestBlazor/bin
@@ -12,6 +13,7 @@ PlantiaApp.Tests/bin
 PlantiaApp/PlantiaApp/obj
 PlantiaApp/PlantiaApp.Shared/obj
 PlantiaApp/PlantiaApp.Web/obj
+PlantiaApp/PlantiaApp.Web.Shared/obj
 PlantiaApp/PlantiaApp.Web.Client/obj
 PlantiaApp.Api/obj
 PlantiaApp.TestBlazor/obj
