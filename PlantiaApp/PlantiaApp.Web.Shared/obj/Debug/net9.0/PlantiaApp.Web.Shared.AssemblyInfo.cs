@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("PlantiaApp.Web.Shared")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+efd14fbc1f1d59291a8789c25f39829c7fe481a5")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e727b7a756f006dac364ea440bc271a177d95bfa")]
 [assembly: System.Reflection.AssemblyProductAttribute("PlantiaApp.Web.Shared")]
 [assembly: System.Reflection.AssemblyTitleAttribute("PlantiaApp.Web.Shared")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
