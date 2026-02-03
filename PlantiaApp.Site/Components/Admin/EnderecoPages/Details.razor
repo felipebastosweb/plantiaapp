@@ -1,0 +1,56 @@
+﻿@page "/enderecos/details"
+@using Microsoft.EntityFrameworkCore
+@using PlantiaApp.Site.Data
+@inject IDbContextFactory<PlantiaApp.Site.Data.ApplicationDbContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Details</PageTitle>
+
+<h1>Details</h1>
+
+<div>
+    <h2>Endereco</h2>
+    <hr />
+    @if (endereco is null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else {
+        <dl class="row">
+            <dt class="col-sm-2">Logradouro</dt>
+            <dd class="col-sm-10">@endereco.Logradouro</dd>
+            <dt class="col-sm-2">Numero</dt>
+            <dd class="col-sm-10">@endereco.Numero</dd>
+            <dt class="col-sm-2">Complemento</dt>
+            <dd class="col-sm-10">@endereco.Complemento</dd>
+            <dt class="col-sm-2">Cep</dt>
+            <dd class="col-sm-10">@endereco.Cep</dd>
+            <dt class="col-sm-2">Latitude</dt>
+            <dd class="col-sm-10">@endereco.Latitude</dd>
+            <dt class="col-sm-2">Longitude</dt>
+            <dd class="col-sm-10">@endereco.Longitude</dd>
+        </dl>
+        <div>
+            <a href="@($"/enderecos/edit?id={endereco.Id}")">Edit</a> |
+            <a href="@($"/enderecos")">Back to List</a>
+        </div>
+    }
+</div>
+
+@code {
+    private Endereco? endereco;
+
+    [SupplyParameterFromQuery]
+    private Guid Id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        endereco = await context.Endereco.FirstOrDefaultAsync(m => m.Id == Id);
+
+        if (endereco is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+}

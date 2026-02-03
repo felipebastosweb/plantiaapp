@@ -1,0 +1,41 @@
+﻿@page "/enderecos"
+@using Microsoft.EntityFrameworkCore
+@using Microsoft.AspNetCore.Components.QuickGrid
+@using PlantiaApp.Site.Data
+@using PlantiaApp.Site.Data
+@implements IAsyncDisposable
+@inject IDbContextFactory<PlantiaApp.Site.Data.ApplicationDbContext> DbFactory
+
+<PageTitle>Index</PageTitle>
+
+<h1>Index</h1>
+
+<p>
+    <a href="enderecos/create">Create New</a>
+</p>
+
+<QuickGrid Class="table" Items="context.Endereco">
+    <PropertyColumn Property="endereco => endereco.Logradouro" />
+    <PropertyColumn Property="endereco => endereco.Numero" />
+    <PropertyColumn Property="endereco => endereco.Complemento" />
+    <PropertyColumn Property="endereco => endereco.Cep" />
+    <PropertyColumn Property="endereco => endereco.Latitude" />
+    <PropertyColumn Property="endereco => endereco.Longitude" />
+
+    <TemplateColumn Context="endereco">
+        <a href="@($"enderecos/edit?id={endereco.Id}")">Edit</a> |
+        <a href="@($"enderecos/details?id={endereco.Id}")">Details</a> |
+        <a href="@($"enderecos/delete?id={endereco.Id}")">Delete</a>
+    </TemplateColumn>
+</QuickGrid>
+
+@code {
+    private ApplicationDbContext context = default!;
+
+    protected override void OnInitialized()
+    {
+        context = DbFactory.CreateDbContext();
+    }
+
+    public async ValueTask DisposeAsync() => await context.DisposeAsync();
+}

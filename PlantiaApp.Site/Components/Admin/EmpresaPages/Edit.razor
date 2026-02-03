@@ -1,0 +1,115 @@
+﻿@page "/empresas/edit"
+@using Microsoft.EntityFrameworkCore
+@using PlantiaApp.Site.Data
+@inject IDbContextFactory<PlantiaApp.Site.Data.ApplicationDbContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Edit</PageTitle>
+
+<h1>Edit</h1>
+
+<h2>Empresa</h2>
+<hr />
+@if (Empresa is null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="row">
+        <div class="col-md-4">
+            <EditForm method="post" Model="Empresa" OnValidSubmit="UpdateEmpresa" FormName="edit" Enhance>
+                <DataAnnotationsValidator />
+                <ValidationSummary role="alert"/>
+                <input type="hidden" name="Empresa.Id" value="@Empresa.Id" />
+                <div class="mb-3">
+                    <label for="applicationuserid" class="form-label">ApplicationUserId:</label>
+                    <InputText id="applicationuserid" @bind-Value="Empresa.ApplicationUserId" class="form-control" />
+                    <ValidationMessage For="() => Empresa.ApplicationUserId" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="razaosocial" class="form-label">RazaoSocial:</label>
+                    <InputText id="razaosocial" @bind-Value="Empresa.RazaoSocial" class="form-control" />
+                    <ValidationMessage For="() => Empresa.RazaoSocial" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="nomefantasia" class="form-label">NomeFantasia:</label>
+                    <InputText id="nomefantasia" @bind-Value="Empresa.NomeFantasia" class="form-control" />
+                    <ValidationMessage For="() => Empresa.NomeFantasia" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="cnpj" class="form-label">Cnpj:</label>
+                    <InputText id="cnpj" @bind-Value="Empresa.Cnpj" class="form-control" />
+                    <ValidationMessage For="() => Empresa.Cnpj" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="enderecoid" class="form-label">EnderecoId:</label>
+                    <InputSelect id="enderecoid" @bind-Value="Empresa.EnderecoId" class="form-select">
+                        <option>Selecione um Endereço</option>
+                        @foreach(var endereco in DbFactory.CreateDbContext().Endereco.AsNoTracking())
+                        {
+                            <option value="@endereco.Id">@endereco.Logradouro, @endereco.Numero, @endereco.Complemento, @endereco.Cep</option>
+                        }
+                    </InputSelect>
+                    <ValidationMessage For="() => Empresa.EnderecoId" class="text-danger" />
+                </div>
+                <button type="submit" class="btn btn-primary">Save</button>
+            </EditForm>
+        </div>
+    </div>
+}
+
+<div>
+    <a href="/empresas">Back to List</a>
+</div>
+
+@code {
+    [SupplyParameterFromQuery]
+    private Guid Id { get; set; }
+
+    [SupplyParameterFromForm]
+    private Empresa? Empresa { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        Empresa ??= await context.Empresa.FirstOrDefaultAsync(m => m.Id == Id);
+
+        if (Empresa is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+
+    // To protect from overposting attacks, enable the specific properties you want to bind to.
+    // For more information, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
+    private async Task UpdateEmpresa()
+    {
+        using var context = DbFactory.CreateDbContext();
+        context.Attach(Empresa!).State = EntityState.Modified;
+
+        try
+        {
+            await context.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            if (!EmpresaExists(Empresa!.Id))
+            {
+                NavigationManager.NavigateTo("notfound");
+            }
+            else
+            {
+                throw;
+            }
+        }
+
+        NavigationManager.NavigateTo("/empresas");
+    }
+
+    private bool EmpresaExists(Guid id)
+    {
+        using var context = DbFactory.CreateDbContext();
+        return context.Empresa.Any(e => e.Id == id);
+    }
+}

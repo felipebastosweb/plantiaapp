@@ -1,0 +1,114 @@
+﻿@page "/enderecos/edit"
+@using Microsoft.EntityFrameworkCore
+@using PlantiaApp.Site.Data
+@inject IDbContextFactory<PlantiaApp.Site.Data.ApplicationDbContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Edit</PageTitle>
+
+<h1>Edit</h1>
+
+<h2>Endereco</h2>
+<hr />
+@if (Endereco is null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="row">
+        <div class="col-md-4">
+            <EditForm method="post" Model="Endereco" OnValidSubmit="UpdateEndereco" FormName="edit" Enhance>
+                <DataAnnotationsValidator />
+                <ValidationSummary role="alert"/>
+                <input type="hidden" name="Endereco.Id" value="@Endereco.Id" />
+                <div class="mb-3">
+                    <label for="logradouro" class="form-label">Logradouro:</label>
+                    <InputText id="logradouro" @bind-Value="Endereco.Logradouro" class="form-control" />
+                    <ValidationMessage For="() => Endereco.Logradouro" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="numero" class="form-label">Numero:</label>
+                    <InputText id="numero" @bind-Value="Endereco.Numero" class="form-control" />
+                    <ValidationMessage For="() => Endereco.Numero" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="complemento" class="form-label">Complemento:</label>
+                    <InputText id="complemento" @bind-Value="Endereco.Complemento" class="form-control" />
+                    <ValidationMessage For="() => Endereco.Complemento" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="cep" class="form-label">Cep:</label>
+                    <InputText id="cep" @bind-Value="Endereco.Cep" class="form-control" />
+                    <ValidationMessage For="() => Endereco.Cep" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="latitude" class="form-label">Latitude:</label>
+                    <InputText id="latitude" @bind-Value="Endereco.Latitude" class="form-control" />
+                    <ValidationMessage For="() => Endereco.Latitude" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="longitude" class="form-label">Longitude:</label>
+                    <InputText id="longitude" @bind-Value="Endereco.Longitude" class="form-control" />
+                    <ValidationMessage For="() => Endereco.Longitude" class="text-danger" />
+                </div>
+                <button type="submit" class="btn btn-primary">Save</button>
+            </EditForm>
+        </div>
+    </div>
+}
+
+<div>
+    <a href="/enderecos">Back to List</a>
+</div>
+
+@code {
+    [SupplyParameterFromQuery]
+    private Guid Id { get; set; }
+
+    [SupplyParameterFromForm]
+    private Endereco? Endereco { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        Endereco ??= await context.Endereco.FirstOrDefaultAsync(m => m.Id == Id);
+
+        if (Endereco is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+
+    // To protect from overposting attacks, enable the specific properties you want to bind to.
+    // For more information, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
+    private async Task UpdateEndereco()
+    {
+        using var context = DbFactory.CreateDbContext();
+        context.Attach(Endereco!).State = EntityState.Modified;
+
+        try
+        {
+            await context.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            if (!EnderecoExists(Endereco!.Id))
+            {
+                NavigationManager.NavigateTo("notfound");
+            }
+            else
+            {
+                throw;
+            }
+        }
+
+        NavigationManager.NavigateTo("/enderecos");
+    }
+
+    private bool EnderecoExists(Guid id)
+    {
+        using var context = DbFactory.CreateDbContext();
+        return context.Endereco.Any(e => e.Id == id);
+    }
+}

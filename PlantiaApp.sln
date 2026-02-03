@@ -3,19 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.12.35527.113
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlantiaApp.Shared", "PlantiaApp\PlantiaApp.Shared\PlantiaApp.Shared.csproj", "{64A530E9-E24B-4729-8852-EB54C1CB7BD9}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlantiaApp", "PlantiaApp\PlantiaApp\PlantiaApp.csproj", "{BBF8D869-5304-48D8-8F1C-133BD03B7E27}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlantiaApp.TestBlazor", "PlantiaApp.TestBlazor\PlantiaApp.TestBlazor.csproj", "{973CF2CA-546A-4C14-AA07-7D128ACA3C47}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlantiaApp.Tests", "PlantiaApp.Tests\PlantiaApp.Tests.csproj", "{2B097FD5-B893-46C0-B9D4-367560C2EBFB}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlantiaApp.Web", "PlantiaApp\PlantiaApp.Web\PlantiaApp.Web.csproj", "{89100F87-8809-42CF-8F6B-26B80D3FFB5C}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlantiaApp.Web.Client", "PlantiaApp\PlantiaApp.Web.Client\PlantiaApp.Web.Client.csproj", "{01DA399A-2961-4362-9048-F9069082FCD9}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlantiaApp.Api", "PlantiaApp.Api\PlantiaApp.Api.csproj", "{47724950-4B02-4689-81D3-D25B4CC741E2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlantiaApp", "PlantiaApp\PlantiaApp.csproj", "{BBF8D869-5304-48D8-8F1C-133BD03B7E27}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Itens de Solução", "Itens de Solução", "{A81C1279-40E5-4368-93BA-C17F7678C43F}"
 	ProjectSection(SolutionItems) = preProject
@@ -24,7 +12,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Itens de Solução", "Itens
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlantiaApp.Web.Shared", "PlantiaApp\PlantiaApp.Web.Shared\PlantiaApp.Web.Shared.csproj", "{57F035F4-FE54-4CCB-93D0-ED4A138AE2F9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlantiaApp.Site", "PlantiaApp.Site\PlantiaApp.Site.csproj", "{F783B63F-1E03-4613-81E8-C2447A4F6142}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -32,40 +20,20 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{64A530E9-E24B-4729-8852-EB54C1CB7BD9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{64A530E9-E24B-4729-8852-EB54C1CB7BD9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{64A530E9-E24B-4729-8852-EB54C1CB7BD9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{64A530E9-E24B-4729-8852-EB54C1CB7BD9}.Release|Any CPU.Build.0 = Release|Any CPU
 		{BBF8D869-5304-48D8-8F1C-133BD03B7E27}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{BBF8D869-5304-48D8-8F1C-133BD03B7E27}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BBF8D869-5304-48D8-8F1C-133BD03B7E27}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
 		{BBF8D869-5304-48D8-8F1C-133BD03B7E27}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BBF8D869-5304-48D8-8F1C-133BD03B7E27}.Release|Any CPU.Build.0 = Release|Any CPU
-		{973CF2CA-546A-4C14-AA07-7D128ACA3C47}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{973CF2CA-546A-4C14-AA07-7D128ACA3C47}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{973CF2CA-546A-4C14-AA07-7D128ACA3C47}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{973CF2CA-546A-4C14-AA07-7D128ACA3C47}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2B097FD5-B893-46C0-B9D4-367560C2EBFB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2B097FD5-B893-46C0-B9D4-367560C2EBFB}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2B097FD5-B893-46C0-B9D4-367560C2EBFB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2B097FD5-B893-46C0-B9D4-367560C2EBFB}.Release|Any CPU.Build.0 = Release|Any CPU
-		{89100F87-8809-42CF-8F6B-26B80D3FFB5C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{89100F87-8809-42CF-8F6B-26B80D3FFB5C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{89100F87-8809-42CF-8F6B-26B80D3FFB5C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{89100F87-8809-42CF-8F6B-26B80D3FFB5C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{01DA399A-2961-4362-9048-F9069082FCD9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{01DA399A-2961-4362-9048-F9069082FCD9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{01DA399A-2961-4362-9048-F9069082FCD9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{01DA399A-2961-4362-9048-F9069082FCD9}.Release|Any CPU.Build.0 = Release|Any CPU
-		{47724950-4B02-4689-81D3-D25B4CC741E2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{47724950-4B02-4689-81D3-D25B4CC741E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{47724950-4B02-4689-81D3-D25B4CC741E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{47724950-4B02-4689-81D3-D25B4CC741E2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{57F035F4-FE54-4CCB-93D0-ED4A138AE2F9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{57F035F4-FE54-4CCB-93D0-ED4A138AE2F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{57F035F4-FE54-4CCB-93D0-ED4A138AE2F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{57F035F4-FE54-4CCB-93D0-ED4A138AE2F9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F783B63F-1E03-4613-81E8-C2447A4F6142}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F783B63F-1E03-4613-81E8-C2447A4F6142}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F783B63F-1E03-4613-81E8-C2447A4F6142}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F783B63F-1E03-4613-81E8-C2447A4F6142}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D1B6C07D-6884-40B1-A2ED-71436728A0BE}
 	EndGlobalSection
 EndGlobal

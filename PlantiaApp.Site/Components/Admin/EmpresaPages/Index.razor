@@ -1,0 +1,40 @@
+﻿@page "/empresas"
+@using Microsoft.EntityFrameworkCore
+@using Microsoft.AspNetCore.Components.QuickGrid
+@using PlantiaApp.Site.Data
+@using PlantiaApp.Site.Data
+@implements IAsyncDisposable
+@inject IDbContextFactory<PlantiaApp.Site.Data.ApplicationDbContext> DbFactory
+
+<PageTitle>Index</PageTitle>
+
+<h1>Index</h1>
+
+<p>
+    <a href="empresas/create">Create New</a>
+</p>
+
+<QuickGrid Class="table" Items="context.Empresa">
+    <PropertyColumn Property="empresa => empresa.ApplicationUserId" />
+    <PropertyColumn Property="empresa => empresa.RazaoSocial" />
+    <PropertyColumn Property="empresa => empresa.NomeFantasia" />
+    <PropertyColumn Property="empresa => empresa.Cnpj" />
+    <PropertyColumn Property="empresa => empresa.EnderecoId" />
+
+    <TemplateColumn Context="empresa">
+        <a href="@($"empresas/edit?id={empresa.Id}")">Edit</a> |
+        <a href="@($"empresas/details?id={empresa.Id}")">Details</a> |
+        <a href="@($"empresas/delete?id={empresa.Id}")">Delete</a>
+    </TemplateColumn>
+</QuickGrid>
+
+@code {
+    private ApplicationDbContext context = default!;
+
+    protected override void OnInitialized()
+    {
+        context = DbFactory.CreateDbContext();
+    }
+
+    public async ValueTask DisposeAsync() => await context.DisposeAsync();
+}
