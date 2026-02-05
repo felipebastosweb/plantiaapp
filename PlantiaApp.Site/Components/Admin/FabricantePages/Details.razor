@@ -1,0 +1,56 @@
+﻿@page "/fabricantes/details"
+@using Microsoft.EntityFrameworkCore
+@using PlantiaApp.Site.Data
+@inject IDbContextFactory<PlantiaApp.Site.Data.ApplicationDbContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Details</PageTitle>
+
+<h1>Details</h1>
+
+<div>
+    <h2>Fabricante</h2>
+    <hr />
+    @if (fabricante is null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else {
+        <dl class="row">
+            <dt class="col-sm-2">Nome</dt>
+            <dd class="col-sm-10">@fabricante.Nome</dd>
+            <dt class="col-sm-2">Imagem</dt>
+            <dd class="col-sm-10">@fabricante.Imagem</dd>
+            <dt class="col-sm-2">Site</dt>
+            <dd class="col-sm-10">@fabricante.Site</dd>
+            <dt class="col-sm-2">Telefone</dt>
+            <dd class="col-sm-10">@fabricante.Telefone</dd>
+            <dt class="col-sm-2">Email</dt>
+            <dd class="col-sm-10">@fabricante.Email</dd>
+            <dt class="col-sm-2">Fax</dt>
+            <dd class="col-sm-10">@fabricante.Fax</dd>
+        </dl>
+        <div>
+            <a href="@($"/fabricantes/edit?id={fabricante.Id}")">Edit</a> |
+            <a href="@($"/fabricantes")">Back to List</a>
+        </div>
+    }
+</div>
+
+@code {
+    private Fabricante? fabricante;
+
+    [SupplyParameterFromQuery]
+    private Guid Id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        fabricante = await context.Fabricante.FirstOrDefaultAsync(m => m.Id == Id);
+
+        if (fabricante is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+}

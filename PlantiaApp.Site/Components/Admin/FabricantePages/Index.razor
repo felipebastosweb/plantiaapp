@@ -1,0 +1,41 @@
+﻿@page "/fabricantes"
+@using Microsoft.EntityFrameworkCore
+@using Microsoft.AspNetCore.Components.QuickGrid
+@using PlantiaApp.Site.Data
+@using PlantiaApp.Site.Data
+@implements IAsyncDisposable
+@inject IDbContextFactory<PlantiaApp.Site.Data.ApplicationDbContext> DbFactory
+
+<PageTitle>Index</PageTitle>
+
+<h1>Index</h1>
+
+<p>
+    <a href="fabricantes/create">Create New</a>
+</p>
+
+<QuickGrid Class="table" Items="context.Fabricante">
+    <PropertyColumn Property="fabricante => fabricante.Nome" />
+    <PropertyColumn Property="fabricante => fabricante.Imagem" />
+    <PropertyColumn Property="fabricante => fabricante.Site" />
+    <PropertyColumn Property="fabricante => fabricante.Telefone" />
+    <PropertyColumn Property="fabricante => fabricante.Email" />
+    <PropertyColumn Property="fabricante => fabricante.Fax" />
+
+    <TemplateColumn Context="fabricante">
+        <a href="@($"fabricantes/edit?id={fabricante.Id}")">Edit</a> |
+        <a href="@($"fabricantes/details?id={fabricante.Id}")">Details</a> |
+        <a href="@($"fabricantes/delete?id={fabricante.Id}")">Delete</a>
+    </TemplateColumn>
+</QuickGrid>
+
+@code {
+    private ApplicationDbContext context = default!;
+
+    protected override void OnInitialized()
+    {
+        context = DbFactory.CreateDbContext();
+    }
+
+    public async ValueTask DisposeAsync() => await context.DisposeAsync();
+}

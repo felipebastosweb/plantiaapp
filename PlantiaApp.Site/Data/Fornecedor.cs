@@ -3,7 +3,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 
 
-public partial class Empresa
+public partial class Fornecedor
 {
     public Guid Id { get; set; }
     public string RazaoSocial { get; set; } = string.Empty;
@@ -16,4 +16,3 @@ public partial class Empresa
     public DateTime? AlteradoEm { get; set; }
     public DateTime? ArquivadoEm { get; set; }
 }
-

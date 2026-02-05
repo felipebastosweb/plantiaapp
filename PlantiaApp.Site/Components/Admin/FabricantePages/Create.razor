@@ -1,0 +1,71 @@
+﻿@page "/fabricantes/create"
+@using Microsoft.EntityFrameworkCore
+@using PlantiaApp.Site.Data
+@inject IDbContextFactory<PlantiaApp.Site.Data.ApplicationDbContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Create</PageTitle>
+
+<h1>Create</h1>
+
+<h2>Fabricante</h2>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <EditForm method="post" Model="Fabricante" OnValidSubmit="AddFabricante" FormName="create" Enhance>
+            <DataAnnotationsValidator />
+            <ValidationSummary class="text-danger" role="alert"/>
+            <div class="mb-3">
+                <label for="nome" class="form-label">Nome:</label> 
+                <InputText id="nome" @bind-Value="Fabricante.Nome" class="form-control" /> 
+                <ValidationMessage For="() => Fabricante.Nome" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="imagem" class="form-label">Imagem:</label> 
+                <InputText id="imagem" @bind-Value="Fabricante.Imagem" class="form-control" /> 
+                <ValidationMessage For="() => Fabricante.Imagem" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="site" class="form-label">Site:</label> 
+                <InputText id="site" @bind-Value="Fabricante.Site" class="form-control" /> 
+                <ValidationMessage For="() => Fabricante.Site" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="telefone" class="form-label">Telefone:</label> 
+                <InputText id="telefone" @bind-Value="Fabricante.Telefone" class="form-control" /> 
+                <ValidationMessage For="() => Fabricante.Telefone" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="email" class="form-label">Email:</label> 
+                <InputText id="email" @bind-Value="Fabricante.Email" class="form-control" /> 
+                <ValidationMessage For="() => Fabricante.Email" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="fax" class="form-label">Fax:</label> 
+                <InputText id="fax" @bind-Value="Fabricante.Fax" class="form-control" /> 
+                <ValidationMessage For="() => Fabricante.Fax" class="text-danger" /> 
+            </div>        
+            <button type="submit" class="btn btn-primary">Create</button>
+        </EditForm>
+    </div>
+</div>
+
+<div>
+    <a href="/fabricantes">Back to List</a>
+</div>
+
+@code {
+    [SupplyParameterFromForm]
+    private Fabricante Fabricante { get; set; } = default!;
+
+    protected override void OnInitialized() => Fabricante ??= new();
+
+    // To protect from overposting attacks, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
+    private async Task AddFabricante()
+    {
+        using var context = DbFactory.CreateDbContext();
+        context.Fabricante.Add(Fabricante);
+        await context.SaveChangesAsync();
+        NavigationManager.NavigateTo("/fabricantes");
+    }
+}
