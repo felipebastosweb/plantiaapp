@@ -1,0 +1,146 @@
+@page "/compras/nova"
+
+@using System.Collections.ObjectModel
+
+<EditForm Model="@compra" OnValidSubmit="HandleValidSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="card shadow-sm p-4">
+        <h3>Nova Ordem de Compra</h3>
+        <hr />
+
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label class="form-label">Fornecedor</label>
+                <InputSelect @bind-Value="compra.FornecedorId" class="form-control">
+                    <option value="">Selecione um fornecedor...</option>
+                    @foreach (var f in fornecedores)
+                    {
+                        <option value="@f.Id">@f.NomeFantasia</option>
+                    }
+                </InputSelect>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">Data da Compra</label>
+                <InputDate @bind-Value="compra.DataCompra" class="form-control" />
+            </div>
+        </div>
+
+        <h4 class="mt-4">Itens da Compra</h4>
+        <table class="table table-hover mt-2">
+            <thead class="table-light">
+                <tr>
+                    <th>Produto</th>
+                    <th style="width: 150px;">Estoque Atual</th>
+                    <th style="width: 120px;">Qtd Comprar</th>
+                    <th>Preço Unit.</th>
+                    <th>Subtotal</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in compra.Itens)
+                {
+                    var estoqueInfo = estoques.FirstOrDefault(e => e.ProdutoId == item.ProdutoId);
+                    <tr>
+                        <td>
+                            <select class="form-control" @onchange="@(e => OnProdutoSelected(item, e))">
+                                <option value="">Selecione o produto...</option>
+                                @foreach (var p in produtos)
+                                {
+                                    <option value="@p.Id" selected="@(item.ProdutoId == p.Id)">@p.Nome</option>
+                                }
+                            </select>
+                        </td>
+                        <td>
+                            @if (estoqueInfo != null)
+                            {
+                                <span class="badge @(estoqueInfo.QuantidadeDisponivel <= estoqueInfo.QuantidadeMinima ? "bg-danger" : "bg-success")">
+                                    @estoqueInfo.QuantidadeDisponivel / Min: @estoqueInfo.QuantidadeMinima
+                                </span>
+                            }
+                        </td>
+                        <td>
+                            <InputNumber @bind-Value="item.Quantidade" class="form-control" @oninput="@(() => CalcularTotais())" />
+                        </td>
+                        <td>
+                            <InputNumber @bind-Value="item.PrecoUnitario" class="form-control" @oninput="@(() => CalcularTotais())" />
+                        </td>
+                        <td class="align-middle">@item.Subtotal.ToString("C2")</td>
+                        <td>
+                            <button type="button" class="btn btn-outline-danger btn-sm" @onclick="() => RemoverItem(item)">Remover</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <div class="d-flex justify-content-between align-items-center mt-3">
+            <button type="button" class="btn btn-secondary" @onclick="AdicionarItem">Adicionar Produto</button>
+            <div class="text-end">
+                <h4>Total da Ordem: <span class="text-primary">@compra.Total.ToString("C2")</span></h4>
+            </div>
+        </div>
+
+        <div class="mt-4">
+            <button type="submit" class="btn btn-success btn-lg">Finalizar Ordem de Compra</button>
+        </div>
+    </div>
+</EditForm>
+
+@code {
+    private Compra compra = new() { DataCompra = DateTime.Now, Itens = new List<CompraItem>() };
+    private List<Fornecedor> fornecedores = new();
+    private List<Produto> produtos = new();
+    private List<Estoque> estoques = new(); // Para exibir recomendações
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Carregamento inicial (Substitua pelos seus serviços reais)
+        fornecedores = await FornecedorRepository.GetAtivosAsync();
+        produtos = await ProdutoRepository.GetAllAsync();
+        estoques = await EstoqueRepository.GetResumoEstoqueAsync();
+        
+        AdicionarItem(); // Inicia com uma linha vazia
+    }
+
+    private void AdicionarItem()
+    {
+        compra.Itens.Add(new CompraItem { Id = Guid.NewGuid() });
+    }
+
+    private void RemoverItem(CompraItem item)
+    {
+        compra.Itens.Remove(item);
+        CalcularTotais();
+    }
+
+    private void OnProdutoSelected(CompraItem item, ChangeEventArgs e)
+    {
+        if (Guid.TryParse(e.Value?.ToString(), out Guid produtoId))
+        {
+            item.ProdutoId = produtoId;
+            // Opcional: Buscar último preço de compra ou preço de tabela
+            CalcularTotais();
+        }
+    }
+
+    private void CalcularTotais()
+    {
+        foreach (var item in compra.Itens)
+        {
+            item.Subtotal = item.Quantidade * item.PrecoUnitario;
+            item.Total = item.Subtotal; // Considerando que Total aqui pode incluir impostos se necessário
+        }
+        compra.Total = compra.Itens.Sum(i => i.Subtotal);
+    }
+
+    private async Task HandleValidSubmit()
+    {
+        // Lógica para salvar no Banco de Dados via API/Repository
+        // Lembre-se de gerar os registros de EstoqueMovimento no Backend
+        var sucesso = await CompraRepository.SalvarCompraAsync(compra);
+        if (sucesso) Navigation.NavigateTo("/compras");
+    }
+}
