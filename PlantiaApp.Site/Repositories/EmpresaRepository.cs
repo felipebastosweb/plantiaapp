@@ -28,7 +28,6 @@ public class EmpresaRepository
         return await _context.Empresa.FindAsync(id);
     }
 
-
     public async Task PutEmpresa(Empresa empresa)
     {
         _context.Entry(empresa).State = EntityState.Modified;
@@ -44,8 +43,12 @@ public class EmpresaRepository
 
     public async Task DeleteEmpresa(Guid id)
     {
-        _context.Empresa.Remove(empresa);
-        await _context.SaveChangesAsync();
+        var empresa = await _context.Empresa.FindAsync(id);
+        if (empresa != null)
+        {
+            _context.Empresa.Remove(empresa);
+            await _context.SaveChangesAsync();
+        }
     }
 
     private bool EmpresaExists(Guid id)
