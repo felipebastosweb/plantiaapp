@@ -1,48 +1,49 @@
-﻿namespace PlantiaApp.Site.Controllers;
+namespace PlantiaApp.Site.Controllers;
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
-using PlantiaApp.Site.Data;
+using PlantiaApp.Site.Repositories; // Certifique-se de importar o namespace do repo
+using PlantiaApp.Site.Models;
 
 [Route("api/[controller]")]
 [ApiController]
 public class FabricantesController : ControllerBase
 {
-    private readonly ApplicationDbContext _context;
+    private readonly FabricanteRepository _repository;
 
-    public FabricantesController(ApplicationDbContext context)
+    public FabricantesController(FabricanteRepository repository)
     {
-        _context = context;
+        _repository = repository;
     }
 
     // GET: api/Fabricantes
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Fabricante>>> GetFabricante()
     {
-        return await _context.Fabricante.ToListAsync();
+        var fabricantes = await _repository.GetAllAsync();
+        return Ok(fabricantes);
     }
 
     // GET: api/Fabricantes/5
     [HttpGet("{id}")]
     public async Task<ActionResult<Fabricante>> GetFabricante(Guid id)
     {
-        var fabricante = await _context.Fabricante.FindAsync(id);
+        var fabricante = await _repository.GetByIdAsync(id);
 
         if (fabricante == null)
         {
             return NotFound();
         }
 
-        return fabricante;
+        return Ok(fabricante);
     }
 
     // PUT: api/Fabricantes/5
-    // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+    [Authorize] // Exige autenticação Identity
     [HttpPut("{id}")]
     public async Task<IActionResult> PutFabricante(Guid id, Fabricante fabricante)
     {
@@ -51,56 +52,42 @@ public class FabricantesController : ControllerBase
             return BadRequest();
         }
 
-        _context.Entry(fabricante).State = EntityState.Modified;
-
         try
         {
-            await _context.SaveChangesAsync();
+            await _repository.PutFabricante(fabricante);
         }
         catch (DbUpdateConcurrencyException)
         {
-            if (!FabricanteExists(id))
+            if (!_repository.FabricanteExists(id))
             {
                 return NotFound();
             }
-            else
-            {
-                throw;
-            }
+            throw;
         }
 
         return NoContent();
     }
 
     // POST: api/Fabricantes
-    // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+    [Authorize] // Exige autenticação Identity
     [HttpPost]
     public async Task<ActionResult<Fabricante>> PostFabricante(Fabricante fabricante)
     {
-        _context.Fabricante.Add(fabricante);
-        await _context.SaveChangesAsync();
-
-        return CreatedAtAction("GetFabricante", new { id = fabricante.Id }, fabricante);
+        var novoFabricante = await _repository.PostFabricante(fabricante);
+        return CreatedAtAction(nameof(GetFabricante), new { id = novoFabricante.Id }, novoFabricante);
     }
 
     // DELETE: api/Fabricantes/5
+    [Authorize] // Exige autenticação Identity
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteFabricante(Guid id)
     {
-        var fabricante = await _context.Fabricante.FindAsync(id);
-        if (fabricante == null)
+        if (!_repository.FabricanteExists(id))
         {
             return NotFound();
         }
 
-        _context.Fabricante.Remove(fabricante);
-        await _context.SaveChangesAsync();
-
+        await _repository.DeleteFabricante(id);
         return NoContent();
-    }
-
-    private bool FabricanteExists(Guid id)
-    {
-        return _context.Fabricante.Any(e => e.Id == id);
     }
 }
