@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
+
 using PlantiaApp.Site.Data;
 
 namespace PlantiaApp.Site.Controllers
@@ -13,95 +15,82 @@ namespace PlantiaApp.Site.Controllers
     [ApiController]
     public class EmpresasController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
-
-        public EmpresasController(ApplicationDbContext context)
+        private readonly EmpresaRepository _repository;
+    
+        public EmpresasController(EmpresaRepository repository)
         {
-            _context = context;
+            _repository = repository;
         }
-
+    
         // GET: api/Empresas
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Empresa>>> GetEmpresa()
         {
-            return await _context.Empresa.ToListAsync();
+            var empresas = await _repository.GetAllAsync();
+            return Ok(empresas);
         }
-
+    
         // GET: api/Empresas/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Empresa>> GetEmpresa(Guid id)
         {
-            var empresa = await _context.Empresa.FindAsync(id);
-
+            var empresa = await _repository.GetByIdAsync(id);
+    
             if (empresa == null)
             {
                 return NotFound();
             }
-
-            return empresa;
+    
+            return Ok(empresa);
         }
-
+    
         // PUT: api/Empresas/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
+        [Authorize]
         public async Task<IActionResult> PutEmpresa(Guid id, Empresa empresa)
         {
             if (id != empresa.Id)
             {
                 return BadRequest();
             }
-
-            _context.Entry(empresa).State = EntityState.Modified;
-
+    
             try
             {
-                await _context.SaveChangesAsync();
+                await _repository.PutEmpresa(empresa);
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!EmpresaExists(id))
+                if (!_repository.EmpresaExists(id))
                 {
                     return NotFound();
                 }
-                else
-                {
-                    throw;
-                }
+                throw;
             }
-
+    
             return NoContent();
         }
-
+    
         // POST: api/Empresas
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
+        [Authorize]
         public async Task<ActionResult<Empresa>> PostEmpresa(Empresa empresa)
         {
-            _context.Empresa.Add(empresa);
-            await _context.SaveChangesAsync();
-
+            await _repository.PostEmpresa(empresa);
             return CreatedAtAction("GetEmpresa", new { id = empresa.Id }, empresa);
         }
-
+    
         // DELETE: api/Empresas/5
         [HttpDelete("{id}")]
+        [Authorize]
         public async Task<IActionResult> DeleteEmpresa(Guid id)
         {
-            var empresa = await _context.Empresa.FindAsync(id);
-            if (empresa == null)
+            if (!_repository.EmpresaExists(id))
             {
                 return NotFound();
             }
-
-            _context.Empresa.Remove(empresa);
-            await _context.SaveChangesAsync();
-
+    
+            await _repository.DeleteEmpresa(id);
             return NoContent();
-        }
-
-        private bool EmpresaExists(Guid id)
-        {
-            return _context.Empresa.Any(e => e.Id == id);
         }
     }
 }
