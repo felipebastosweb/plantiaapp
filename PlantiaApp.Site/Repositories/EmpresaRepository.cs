@@ -18,84 +18,34 @@ public class EmpresaRepository
         _context = context;
     }
 
-    public async Task<ActionResult<IEnumerable<Empresa>>> GetEmpresa()
+    public async Task<ActionResult<IEnumerable<Empresa>>> GetAllAsync()
     {
         return await _context.Empresa.ToListAsync();
     }
 
-    public async Task<Empresa> GetEmpresa(Guid id)
+    public async Task<Empresa> GetByIdAsync(Guid id)
     {
-        try
-        {
-            var empresa = await _context.Empresa.FindAsync(id);
-
-            if (empresa == null)
-            {
-                throw new KeyNotFoundException("Empresa não encontrada.");
-            }
-
-            return empresa;
-
-        }
-        catch (Exception ex)
-        {
-            throw new Exception("Erro ao buscar a empresa: " + ex.Message);
-        }
+        return await _context.Empresa.FindAsync(id);
     }
 
 
-    public async Task PutEmpresa(Guid id, Empresa empresa)
+    public async Task PutEmpresa(Empresa empresa)
     {
-
-        try
-        {
-            if (id != empresa.Id)
-            {
-                throw new ArgumentException("ID da empresa não corresponde.");
-            }
-
-            _context.Entry(empresa).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
-        }
-        catch (DbUpdateConcurrencyException)
-        {
-            if (!EmpresaExists(id))
-            {
-                throw new KeyNotFoundException("Empresa não encontrada.");
-            }
-            else
-            {
-                throw;
-            }
-        }
+        _context.Entry(empresa).State = EntityState.Modified;
+        await _context.SaveChangesAsync();
     }
 
     public async Task<Empresa> PostEmpresa(Empresa empresa)
     {
         _context.Empresa.Add(empresa);
         await _context.SaveChangesAsync();
-
         return empresa;
     }
 
     public async Task DeleteEmpresa(Guid id)
     {
-        try
-        {
-            var empresa = await _context.Empresa.FindAsync(id);
-            if (empresa == null)
-            {
-                throw new KeyNotFoundException("Empresa não encontrada.");
-            }
-
-            _context.Empresa.Remove(empresa);
-            await _context.SaveChangesAsync();
-
-        }
-        catch (Exception ex)
-        {
-            throw new Exception("Erro ao deletar a empresa: " + ex.Message);
-        }
+        _context.Empresa.Remove(empresa);
+        await _context.SaveChangesAsync();
     }
 
     private bool EmpresaExists(Guid id)
