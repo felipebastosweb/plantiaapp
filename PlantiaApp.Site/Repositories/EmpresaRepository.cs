@@ -23,25 +23,25 @@ public class EmpresaRepository
         return await _context.Empresa.ToListAsync();
     }
 
-    public async Task<Empresa> GetByIdAsync(Guid id)
+    public async Task<Empresa?> GetByIdAsync(Guid id)
     {
         return await _context.Empresa.FindAsync(id);
     }
 
-    public async Task PutEmpresa(Empresa empresa)
+    public async Task PutAsync(Empresa empresa)
     {
         _context.Entry(empresa).State = EntityState.Modified;
         await _context.SaveChangesAsync();
     }
 
-    public async Task<Empresa> PostEmpresa(Empresa empresa)
+    public async Task<Empresa> PostAsync(Empresa empresa)
     {
         _context.Empresa.Add(empresa);
         await _context.SaveChangesAsync();
         return empresa;
     }
 
-    public async Task DeleteEmpresa(Guid id)
+    public async Task DeleteAsync(Guid id)
     {
         var empresa = await _context.Empresa.FindAsync(id);
         if (empresa != null)
@@ -51,8 +51,8 @@ public class EmpresaRepository
         }
     }
 
-    private bool EmpresaExists(Guid id)
-    {
+    public bool Exists(Guid id)
+    {  
         return _context.Empresa.Any(e => e.Id == id);
     }
 }

@@ -1,96 +1,91 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿namespace PlantiaApp.Site.Controllers;
+
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
 
 using PlantiaApp.Site.Data;
+using PlantiaApp.Site.Repositories;
 
-namespace PlantiaApp.Site.Controllers
+[Route("api/[controller]")]
+[ApiController]
+public class EmpresasController : ControllerBase
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class EmpresasController : ControllerBase
+    private readonly EmpresaRepository _repository;
+
+    public EmpresasController(EmpresaRepository repository)
     {
-        private readonly EmpresaRepository _repository;
-    
-        public EmpresasController(EmpresaRepository repository)
+        _repository = repository;
+    }
+
+    // GET: api/Empresas
+    [HttpGet]
+    public async Task<ActionResult<IEnumerable<Empresa>>> GetEmpresa()
+    {
+        var empresas = await _repository.GetAllAsync();
+        return Ok(empresas);
+    }
+
+    // GET: api/Empresas/5
+    [HttpGet("{id}")]
+    public async Task<ActionResult<Empresa>> GetEmpresa(Guid id)
+    {
+        var empresa = await _repository.GetByIdAsync(id);
+
+        if (empresa == null)
         {
-            _repository = repository;
+            return NotFound();
         }
-    
-        // GET: api/Empresas
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Empresa>>> GetEmpresa()
+
+        return Ok(empresa);
+    }
+
+    // PUT: api/Empresas/5
+    [HttpPut("{id}")]
+    [Authorize]
+    public async Task<IActionResult> PutEmpresa(Guid id, Empresa empresa)
+    {
+        if (id != empresa.Id)
         {
-            var empresas = await _repository.GetAllAsync();
-            return Ok(empresas);
+            return BadRequest();
         }
-    
-        // GET: api/Empresas/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Empresa>> GetEmpresa(Guid id)
+
+        try
         {
-            var empresa = await _repository.GetByIdAsync(id);
-    
-            if (empresa == null)
+            await _repository.PutAsync(empresa);
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            if (!_repository.Exists(id))
             {
                 return NotFound();
             }
-    
-            return Ok(empresa);
+            throw;
         }
-    
-        // PUT: api/Empresas/5
-        [HttpPut("{id}")]
-        [Authorize]
-        public async Task<IActionResult> PutEmpresa(Guid id, Empresa empresa)
+
+        return NoContent();
+    }
+
+    // POST: api/Empresas
+    [HttpPost]
+    [Authorize]
+    public async Task<ActionResult<Empresa>> PostEmpresa(Empresa empresa)
+    {
+        await _repository.PostAsync(empresa);
+        return CreatedAtAction("GetEmpresa", new { id = empresa.Id }, empresa);
+    }
+
+    // DELETE: api/Empresas/5
+    [HttpDelete("{id}")]
+    [Authorize]
+    public async Task<IActionResult> DeleteEmpresa(Guid id)
+    {
+        if (!_repository.Exists(id))
         {
-            if (id != empresa.Id)
-            {
-                return BadRequest();
-            }
-    
-            try
-            {
-                await _repository.PutEmpresa(empresa);
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!_repository.EmpresaExists(id))
-                {
-                    return NotFound();
-                }
-                throw;
-            }
-    
-            return NoContent();
+            return NotFound();
         }
-    
-        // POST: api/Empresas
-        [HttpPost]
-        [Authorize]
-        public async Task<ActionResult<Empresa>> PostEmpresa(Empresa empresa)
-        {
-            await _repository.PostEmpresa(empresa);
-            return CreatedAtAction("GetEmpresa", new { id = empresa.Id }, empresa);
-        }
-    
-        // DELETE: api/Empresas/5
-        [HttpDelete("{id}")]
-        [Authorize]
-        public async Task<IActionResult> DeleteEmpresa(Guid id)
-        {
-            if (!_repository.EmpresaExists(id))
-            {
-                return NotFound();
-            }
-    
-            await _repository.DeleteEmpresa(id);
-            return NoContent();
-        }
+
+        await _repository.DeleteAsync(id);
+        return NoContent();
     }
 }

@@ -3,7 +3,7 @@ namespace PlantiaApp.Site.Controllers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using PlantiaApp.Site.Models;
+using PlantiaApp.Site.Data;
 using PlantiaApp.Site.Repositories;
 
 [Route("api/[controller]")]

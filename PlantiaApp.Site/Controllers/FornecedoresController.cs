@@ -3,7 +3,7 @@ namespace PlantiaApp.Site.Controllers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using PlantiaApp.Site.Models;
+using PlantiaApp.Site.Data;
 using PlantiaApp.Site.Repositories;
 
 [Route("api/[controller]")]
@@ -70,7 +70,7 @@ public class FornecedoresController : ControllerBase
         }
         catch (DbUpdateConcurrencyException)
         {
-            if (!await _repository.ExistsAsync(id))
+            if (! _repository.Exists(id))
             {
                 return NotFound();
             }
@@ -85,7 +85,7 @@ public class FornecedoresController : ControllerBase
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteFornecedor(Guid id)
     {
-        var existe = await _repository.ExistsAsync(id);
+        var existe = _repository.Exists(id);
         if (!existe)
         {
             return NotFound();

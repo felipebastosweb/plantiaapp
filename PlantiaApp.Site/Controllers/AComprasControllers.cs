@@ -3,7 +3,7 @@ namespace PlantiaApp.Site.Controllers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using PlantiaApp.Site.Models;
+using PlantiaApp.Site.Data;
 using PlantiaApp.Site.Repositories;
 
 [Route("api/[controller]")]
@@ -32,12 +32,12 @@ public class ComprasController : ControllerBase
     {
         var compra = await _compraRepository.GetByIdAsync(id);
 
-        if (compra == null)
+        if (compra is null)
         {
             return NotFound();
         }
 
-        return Ok(compra);
+        return Ok((object)compra);
     }
 
     // POST: api/Compras

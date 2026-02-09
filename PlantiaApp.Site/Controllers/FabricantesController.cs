@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using PlantiaApp.Site.Repositories; // Certifique-se de importar o namespace do repo
-using PlantiaApp.Site.Models;
+using PlantiaApp.Site.Data;
 
 [Route("api/[controller]")]
 [ApiController]
@@ -54,11 +54,11 @@ public class FabricantesController : ControllerBase
 
         try
         {
-            await _repository.PutFabricante(fabricante);
+            await _repository.PutAsync(fabricante);
         }
         catch (DbUpdateConcurrencyException)
         {
-            if (!_repository.FabricanteExists(id))
+            if (!_repository.Exists(id))
             {
                 return NotFound();
             }
@@ -73,7 +73,7 @@ public class FabricantesController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<Fabricante>> PostFabricante(Fabricante fabricante)
     {
-        var novoFabricante = await _repository.PostFabricante(fabricante);
+        var novoFabricante = await _repository.PostAsync(fabricante);
         return CreatedAtAction(nameof(GetFabricante), new { id = novoFabricante.Id }, novoFabricante);
     }
 
@@ -82,7 +82,7 @@ public class FabricantesController : ControllerBase
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteFabricante(Guid id)
     {
-        if (!_repository.FabricanteExists(id))
+        if (!_repository.Exists(id))
         {
             return NotFound();
         }

@@ -8,20 +8,42 @@ public partial class Fornecedor
     public ICollection<Compra> Compras { get; set; } = [];
 }
 
+public enum CompraEstado
+{
+    Rascunho,
+    PendenteDeAprovacao,
+    Confirmada,
+    Recebida,
+    Cancelada
+}
+
 public partial class Compra
 {
     public Guid Id { get; set; }
+    // O UsuarioId é uma string que representa o ID do usuário (Funcionário) que fez a compra
+    public string UsuarioId { get; set; } = string.Empty;
+    public DateTime DataCompra { get; set; }
+    [Column(TypeName = "decimal(18, 2)")]
+    public decimal Total { get; set; }
+    [Column(TypeName = "decimal(7, 2)")]
+    public decimal TotalTaxas { get; set; }
+    [Column(TypeName = "decimal(7, 2)")]
+    public decimal TotalDescontos { get; set; }
+    [Column(TypeName = "decimal(7, 2)")]
+    public decimal TotalFrete { get; set; }
+    public CompraEstado Estado { get; set; } = CompraEstado.Rascunho;
+    public DateTime? DataDaCompra { get; set; }
+    public DateTime? DataPrevistaDeRecebimento { get; set; }
+    public DateTime? DataDeRecebimento { get; set; }
     public Guid FornecedorId { get; set; }
     [ForeignKey(nameof(FornecedorId))]
     public virtual Fornecedor Fornecedor { get; set; } = null!;
     public Guid EmpresaId { get; set; }
     [ForeignKey(nameof(EmpresaId))]
     public virtual Empresa Empresa { get; set; } = null!;
-    public string UsuarioId { get; set; } = string.Empty;
-    public DateTime DataCompra { get; set; }
-    public decimal Total { get; set; }
     // Uma compra tem muitos itens
     public ICollection<CompraItem> Itens { get; set; } = [];
+    public DateTime CriadoEm { get; set; } = DateTime.UtcNow;
 }
 
 public class CompraItem
@@ -68,4 +90,5 @@ public class EstoqueMovimento
     public decimal Quantidade { get; set; }
     public string TipoMovimento { get; set; } = string.Empty; // "Entrada" ou "Saída"
     public string? Observacao { get; set; }
+    public DateTime CriadoEm { get; set; } = DateTime.UtcNow;
 }

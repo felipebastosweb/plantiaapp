@@ -1,6 +1,15 @@
 @page "/compras/nova"
 
-@using System.Collections.ObjectModel
+
+@using PlantiaApp.Site.Data
+@using PlantiaApp.Site.Repositories
+
+@inject FornecedorRepository FornecedorRepository
+@inject ProdutoRepository ProdutoRepository
+@inject EstoqueRepository EstoqueRepository
+@inject CompraRepository CompraRepository
+
+@inject NavigationManager Navigation
 
 <EditForm Model="@compra" OnValidSubmit="HandleValidSubmit">
     <DataAnnotationsValidator />
@@ -91,9 +100,10 @@
 
 @code {
     private Compra compra = new() { DataCompra = DateTime.Now, Itens = new List<CompraItem>() };
-    private List<Fornecedor> fornecedores = new();
-    private List<Produto> produtos = new();
-    private List<Estoque> estoques = new(); // Para exibir recomendações
+    private ICollection<Fornecedor> fornecedores = [];
+    private ICollection<Produto> produtos = [];
+    private ICollection<Estoque> estoques = []; // Para exibir recomendações
+
 
     protected override async Task OnInitializedAsync()
     {

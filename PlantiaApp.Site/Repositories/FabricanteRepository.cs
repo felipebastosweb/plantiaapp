@@ -10,11 +10,13 @@ public class FabricanteRepository
     {
         _context = context;
     }
-    public async Task<IEnumerable<Fabricante>> GetFabricante()
+
+    public async Task<IEnumerable<Fabricante>> GetAllAsync()
     {
         return await _context.Fabricante.ToListAsync();
     }
-    public async Task<Fabricante> GetFabricante(Guid id)
+
+    public async Task<Fabricante> GetByIdAsync(Guid id)
     {
         try
         {
@@ -31,37 +33,25 @@ public class FabricanteRepository
         }
     }
 
-    public async Task<Fabricante> PostFabricante(Fabricante fabricante)
+    public async Task<Fabricante> PostAsync(Fabricante fabricante)
     {
         _context.Fabricante.Add(fabricante);
         await _context.SaveChangesAsync();
         return fabricante;
     }
 
-    public async Task PutFabricante(Guid id, Fabricante fabricante)
+    public async Task PutAsync(Fabricante fabricante)
     {
-        if (id != fabricante.Id)
+        if(Exists(fabricante.Id) == false)
         {
-            throw new ArgumentException("ID do fabricante não corresponde ao ID fornecido.");
+            throw new KeyNotFoundException("Fabricante não encontrado.");
         }
+
         _context.Entry(fabricante).State = EntityState.Modified;
-        try
-        {
-            await _context.SaveChangesAsync();
-        }
-        catch (DbUpdateConcurrencyException)
-        {
-            if (!FabricanteExists(id))
-            {
-                throw new KeyNotFoundException("Fabricante não encontrado.");
-            }
-            else
-            {
-                throw;
-            }
-        }
+        await _context.SaveChangesAsync();
     }
-    private bool FabricanteExists(Guid id)
+
+    public bool Exists(Guid id)
     {
         return _context.Fabricante.Any(e => e.Id == id);
     }

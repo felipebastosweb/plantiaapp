@@ -1,4 +1,6 @@
-﻿namespace PlantiaApp.Site.Data;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace PlantiaApp.Site.Data;
 
 public class Venda
 {
@@ -16,7 +18,7 @@ public class VendaItem
     public Guid Id { get; set; }
     public Guid VendaId { get; set; }
     [ForeignKey(nameof(VendaId))]
-    public virtual Venda Venda { get; set; } = null
+    public virtual Venda Venda { get; set; } = null!;
     public Guid CompraItemId { get; set; }
     [ForeignKey(nameof(CompraItemId))]
     public virtual CompraItem CompraItem { get; set; } = null!;
