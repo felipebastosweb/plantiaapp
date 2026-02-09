@@ -1,5 +1,5 @@
-# plantiaapp
-Uma plataforma que une pessoas que se interessa por plantas com quem produz
+# PlantiaApp
+Uma plataforma que une pessoas que se interessam por plantas com quem produz ou refloresta
 
 ## A quem se destina a plataforma?
 Aos usuários domésticos, produtores de plantas, paisagistas, urbanistas e reflorestadores amadores e profissionais. Queremos ajudar o planeta a voltar a ser mais verde.
